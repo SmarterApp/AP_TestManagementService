@@ -1,3 +1,23 @@
+/*
+ *  Copyright 2017 Regents of the University of California.
+ *
+ *  Licensed under the Educational Community License, Version 2.0 (the "license");
+ *  you may not use this file except in compliance with the License. You may
+ *  obtain a copy of the license at
+ *
+ *  https://opensource.org/licenses/ECL-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.image.DockerRemoveImage
+import org.apache.tools.ant.BuildException
+import org.apache.tools.ant.filters.ReplaceTokens
 
 buildscript {
     ext {
@@ -114,112 +134,112 @@ processResources {
  * publishing
  ***************************/
 
-//task sourceJar(type: Jar) {
-//    from sourceSets.main.allJava
-//}
-//
-//publishing.publications {
-//    mavenJava(MavenPublication) {
-//        from components.java
-//
-//        artifact sourceJar {
-//            classifier "sources"
-//        }
-//    }
-//}
-//
-//artifactory {
-//    contextUrl = artifactoryUrl
-//
-//    publish {
-//        repository {
-//            repoKey  = project.version.contains('-SNAPSHOT') ? project.artifactorySnapshotPublish : project.artifactoryReleasePublish
-//            username = project.artifactoryUser
-//            password = project.artifactoryPassword
-//            maven	 = true
-//        }
-//        defaults {
-//            publications ('mavenJava')
-//        }
-//    }
-//}
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing.publications {
+    mavenJava(MavenPublication) {
+        from components.java
+
+        artifact sourceJar {
+            classifier "sources"
+        }
+    }
+}
+
+artifactory {
+    contextUrl = artifactoryUrl
+
+    publish {
+        repository {
+            repoKey  = project.version.contains('-SNAPSHOT') ? project.artifactorySnapshotPublish : project.artifactoryReleasePublish
+            username = project.artifactoryUser
+            password = project.artifactoryPassword
+            maven	 = true
+        }
+        defaults {
+            publications ('mavenJava')
+        }
+    }
+}
 
 /***************************
  * kubernetes (k8s)
  ***************************/
 
-//task k8sCopyFiles(type: Copy) {
-//
-//    from('src/main/kubernetes/') {
-//        filter(ReplaceTokens, tokens: [version              : project.version,
-//                                       dockerTagBase        : project.dockerTagBase,
-//                                       kubecfgState         : project.kubecfgState,
-//                                       kubecfgName          : project.kubecfgName,
-//                                       kubecfgDeployment    : project.kubecfgDeployment])
-//    }
-//
-//    into 'build/kubernetes'
-//}
-//
-//task k8sCopyFilesUat(type: Copy) {
-//
-//    from('src/main/kubernetes/') {
-//        filter(ReplaceTokens, tokens: [version              : project.version,
-//                                       dockerTagBase        : project.dockerTagBase,
-//                                       kubecfgState         : project.kubecfgState,
-//                                       kubecfgName          : project.kubecfgNameUat,
-//                                       kubecfgDeployment    : project.kubecfgDeployment])
-//    }
-//
-//    into 'build/kubernetes'
-//}
+task k8sCopyFiles(type: Copy) {
+
+    from('src/main/kubernetes/') {
+        filter(ReplaceTokens, tokens: [version              : project.version,
+                                       dockerTagBase        : project.dockerTagBase,
+                                       kubecfgState         : project.kubecfgState,
+                                       kubecfgName          : project.kubecfgName,
+                                       kubecfgDeployment    : project.kubecfgDeployment])
+    }
+
+    into 'build/kubernetes'
+}
+
+task k8sCopyFilesUat(type: Copy) {
+
+    from('src/main/kubernetes/') {
+        filter(ReplaceTokens, tokens: [version              : project.version,
+                                       dockerTagBase        : project.dockerTagBase,
+                                       kubecfgState         : project.kubecfgState,
+                                       kubecfgName          : project.kubecfgNameUat,
+                                       kubecfgDeployment    : project.kubecfgDeployment])
+    }
+
+    into 'build/kubernetes'
+}
 
 /***************************
  * docker
  ***************************/
 
-//docker {
-//    registryCredentials {
-//        username = project.dockerHubUser
-//        password = project.dockerHubPassword
-//        email = project.dockerHubEmail
-//    }
-//}
-//
-//task dockerCopyFiles(type: Copy) {
-//    dependsOn 'bootRepackage'
-//
-//    from('src/main/docker/') {
-//        filter(ReplaceTokens, tokens: [USER_HOME:           System.env.HOME,
-//                                       configServerVersion: project.configServerVersion,
-//                                       version:             project.version,
-//                                       dockerTagBase:       project.dockerTagBase])
-//    }
-//
-//    from("build/libs/${jar.archiveName}") {
-//        // drop version from artifact name
-//        rename { String fileName ->
-//            fileName.replace("-${project.version}", "")
-//        }
-//    }
-//
-//    into 'build/docker'
-//}
-//
-//task dockerBuildImage(type: DockerBuildImage) {
-//    dependsOn 'dockerCopyFiles'
-//    inputDir = project.file('build/docker/')
-//    tag = "${project.dockerTagBase}/${jar.baseName}:${project.version}"
-//}
-//
-//task dockerPushImage(type: DockerPushImage) {
-//    dependsOn 'dockerBuildImage'
-//    imageName = "${project.dockerTagBase}/${jar.baseName}:${project.version}"
-//}
-//
-//task dockerRemoveImage(type: DockerRemoveImage) {
-//    imageId = "${project.dockerTagBase}/${jar.baseName}:${project.version}"
-//}
+docker {
+    registryCredentials {
+        username = project.dockerHubUser
+        password = project.dockerHubPassword
+        email = project.dockerHubEmail
+    }
+}
+
+task dockerCopyFiles(type: Copy) {
+    dependsOn 'bootRepackage'
+
+    from('src/main/docker/') {
+        filter(ReplaceTokens, tokens: [USER_HOME:           System.env.HOME,
+                                       configServerVersion: project.configServerVersion,
+                                       version:             project.version,
+                                       dockerTagBase:       project.dockerTagBase])
+    }
+
+    from("build/libs/${jar.archiveName}") {
+        // drop version from artifact name
+        rename { String fileName ->
+            fileName.replace("-${project.version}", "")
+        }
+    }
+
+    into 'build/docker'
+}
+
+task dockerBuildImage(type: DockerBuildImage) {
+    dependsOn 'dockerCopyFiles'
+    inputDir = project.file('build/docker/')
+    tag = "${project.dockerTagBase}/${jar.baseName}:${project.version}"
+}
+
+task dockerPushImage(type: DockerPushImage) {
+    dependsOn 'dockerBuildImage'
+    imageName = "${project.dockerTagBase}/${jar.baseName}:${project.version}"
+}
+
+task dockerRemoveImage(type: DockerRemoveImage) {
+    imageId = "${project.dockerTagBase}/${jar.baseName}:${project.version}"
+}
 
 /***************************
  * Checkstyle
