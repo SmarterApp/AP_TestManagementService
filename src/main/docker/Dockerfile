@@ -11,7 +11,7 @@ MAINTAINER Smarter Balanced "opentestsystem.org"
 
 VOLUME ["/tmp"]
 
-COPY ap-ims.jar /
+COPY ap-tms.jar /
 
 RUN apk add --update curl && rm -rf /var/cache/apk/*
 
@@ -19,4 +19,4 @@ RUN apk add --update jq && rm -rf /var/cache/apk/*
 
 ENTRYPOINT ["/usr/bin/java"]
 
-CMD ["-jar", "/ap-ims.jar"]
+CMD ["-jar", "/ap-tms.jar"]
