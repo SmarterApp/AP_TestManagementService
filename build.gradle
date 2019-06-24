@@ -299,3 +299,43 @@ tasks.withType(FindBugs) {
         html.stylesheet resources.text.fromFile('config/findbugs/findbugs-color.xsl')
     }
 }
+
+/***************************
+ * set common version
+ ***************************/
+
+task updateCommonVersion {
+    doLast {
+        doCommonVersionUpdate(project.newCommonVersion)
+    }
+}
+
+def doCommonVersionUpdate(String version) {
+    String currentVersion = project.commonVersion
+    File propertiesFile = project.file(Project.GRADLE_PROPERTIES)
+    if (!propertiesFile.file) {
+        propertiesFile.append("commonVersion=${version}")
+    }else {
+        try {
+            project.ant.replace(file: propertiesFile, token: "commonVersion=${currentVersion}", value: "commonVersion=${version}", failOnNoReplacements: true)
+        } catch (BuildException e) {
+            throw new GradleException("Failed to update version in ${Project.GRADLE_PROPERTIES}.  Check the property exists and is formatted correctly.")
+        }
+    }
+}
+
+/***************************
+ * gradle wrapper
+ ***************************/
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.4.1'
+}
+
+/***************************
+ * Lifecycle enhancements
+ ***************************/
+
+tasks.artifactoryPublish.dependsOn 'build'
+
+test.finalizedBy(jacocoTestReport)
