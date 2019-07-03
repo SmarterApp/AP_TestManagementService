@@ -38,6 +38,11 @@ spring:
     username: "${DB_USER}"
     password: "${DB_PASSWORD}"
     validationQuery: "SELECT 1"
+  autoexclude:
+    exclude:
+      - org.springframework.spring-context
+      - org.springframework.spring-mock
+      - org.springframework.el-api
   jpa:
     hibernate:
       ddl-auto: "validate"
@@ -53,7 +58,7 @@ itembank:
   user: "${GITLAB_USER}"
   password: "${GITLAB_PASSWORD}"
   group: "${GITLAB_GROUP}"
-  localBaseDir: "${HOME}/ItemBankIVS"
+  localBaseDir: "${HOME}/ItemBankTMS"
   apiVersion: "/api/v4"
   bankKey: "200"
   systemVersion: "iat-20"
@@ -65,6 +70,7 @@ itembank:
     bucketName: "${itembank.group}"
     accessKey: "${IAT_AWS_ACCESS_KEY}"
     secretKey: "${IAT_AWS_ACCESS_SECRET}"
+
 
 tasks:
   itemCleanupThresholdMillis : "1800000000"
