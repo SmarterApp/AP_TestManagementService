@@ -38,6 +38,11 @@ spring:
     username: "${DB_USER}"
     password: "${DB_PASSWORD}"
     validationQuery: "SELECT 1"
+  autoexclude:
+    exclude:
+      - org.springframework.spring-context
+      - org.springframework.spring-mock
+      - org.springframework.el-api
   jpa:
     hibernate:
       ddl-auto: "validate"
