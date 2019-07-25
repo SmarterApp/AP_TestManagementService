@@ -1,0 +1,47 @@
+{
+	"info": {
+		"_postman_id": "3a4bb6ee-fad3-4959-80d0-06d8ba575e24",
+		"name": "TMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8089/api/v1/package/generate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/aponce/Documents/projects/smarter/fixedformpackager/SBAC-IAB-FIXED-G7E-Winter.xlsx"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8089/api/v1/package/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"api",
+						"v1",
+						"package",
+						"generate"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
