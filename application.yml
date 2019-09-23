@@ -15,13 +15,6 @@
 server:
   port: 8089
 
-security:
-  basic:
-    enabled: "${SECURITY_ENABLED:true}"
-  user:
-    name: "admin"
-    password: "admin"
-
 logging:
   level:
     org:
@@ -29,43 +22,6 @@ logging:
         ap:
           irs: "debug"
           common: "debug"
-
-spring:
-  session:
-    enabled: "${SESSION_CLUSTER_ENABLED:true}"
-  datasource:
-    url: "jdbc:postgresql://localhost:5432/iat"
-    username: "${DB_USER}"
-    password: "${DB_PASSWORD}"
-    validationQuery: "SELECT 1"
-  jpa:
-    hibernate:
-      ddl-auto: "validate"
-    properties:
-      hibernate:
-        show_sql: true
-        use_sql_comments: true
-        format_sql: true
-
-itembank:
-  systemVersion: "iat-41"
-  localBaseDir: "${HOME}/ItemBankTMS"
-  systemUser:
-    userName: "iat-test-management-service@smarterbalanced.org"
-    fullName: "Test Management Service"
-  enabled:
-    database: true
-  aws:
-    endpointUrl: "https://s3.us-east-2.amazonaws.com"
-    region: "us-east-2"
-    bucketName: "${GITLAB_GROUP}"
-    versionedBucketName: "${GITLAB_GROUP}-versioned"
-    accessKey: "${IAT_AWS_ACCESS_KEY}"
-    secretKey: "${IAT_AWS_ACCESS_SECRET}"
-
-tasks:
-  itemCleanupThresholdMillis : "1800000000"
-  itemCleanupRunEveryMillis: "1800000000"
 
 ---
 spring:
