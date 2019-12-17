@@ -1,7 +1,7 @@
 test-package:
   create: >-
     INSERT INTO test_package (id, package_id, locked, is_being_created, test_package_json, message, inserted_by, is_deleted) VALUES
-      (:id, :packageId, :locked, :beingCreated, cast(:testPackage AS JSON), :message, :insertedBy, is_deleted)
+      (:id, :packageId, :locked, :beingCreated, cast(:testPackage AS JSON), :message, :insertedBy, :deleted)
 
   findOne: >-
     SELECT id, package_id, locked, is_being_created, test_package_json, message, inserted_date, inserted_by, message
@@ -9,8 +9,8 @@ test-package:
 
   findLatestByTestPackageId: >-
     SELECT id, package_id, locked, is_being_created, test_package_json, message, inserted_date, inserted_by, message
-    FROM test_package where test_package_id = :testPackageId order by inserted_date desc limit 1;
+    FROM test_package where package_id = :testPackageId order by inserted_date desc limit 1;
 
   findLatestNonEditedByTestPackageId: >-
     SELECT id, package_id, locked, is_being_created, test_package_json, message, inserted_date, inserted_by, message
-    FROM test_package where test_package_id = :testPackageId and locked = false and is_deleted = false order by inserted_date desc limit 1;
+    FROM test_package where package_id = :testPackageId and locked = false and is_deleted = false order by inserted_date desc limit 1;
